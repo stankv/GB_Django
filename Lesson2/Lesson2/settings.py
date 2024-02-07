@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'task1',
+    'blogapp',
 ]
 
 MIDDLEWARE = [
@@ -153,6 +154,11 @@ LOGGING = {
             'level': 'INFO',
         },
         'task1': {    # обязательно указать имя приложения!!!
+            'handlers': ['console', 'file'],
+            'level': 'DEBUG',
+            'propagate': True,    # True - сообщения будут передаваться родительским логгерам
+        },
+        'blogapp': {    # обязательно указать имя приложения!!!
             'handlers': ['console', 'file'],
             'level': 'DEBUG',
             'propagate': True,    # True - сообщения будут передаваться родительским логгерам
