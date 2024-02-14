@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Последние заказанные товары клиента {{ client.name }}
+{% endblock title %}
+
+{% block content %}
+<h2>Последние заказанные товары клиента: {{ client.name }}</h2>
+    <h3>За последние 7 дней (неделю):</h3>
+    <ol>
+        {% for item in orders_by_data.week %}
+            <li>Заказ №{{ item.order.id }} от {{ item.order.date_ordered }} Товар: {{ item.product.name }} - Количество: {{ item.product_number }} шт.</li>
+        {% endfor %}
+    </ol>
+
+    <h3>За последние 30 дней (месяц):</h3>
+    <ol>
+        {% for item in orders_by_data.month %}
+            <li>Заказ №{{ item.order.id }} от {{ item.order.date_ordered }} Товар: {{ item.product.name }} - Количество: {{ item.product_number }} шт.</li>
+        {% endfor %}
+    </ol>
+
+    <h3>За последние 365 дней (год):</h3>
+    <ol>
+        {% for item in orders_by_data.year %}
+            <li>Заказ №{{ item.order.id }} от {{ item.order.date_ordered }} Товар: {{ item.product.name }} - Количество: {{ item.product_number }} шт.</li>
+        {% endfor %}
+    </ol>
+
+{% endblock content %}
