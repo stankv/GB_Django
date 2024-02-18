@@ -13,11 +13,12 @@ class Client(models.Model):
 
 
 class Product(models.Model):
-    name = models.CharField(max_length=100)
-    description = models.TextField()
-    price = models.DecimalField(max_digits=8, decimal_places=2)
-    quantity = models.IntegerField()
+    name = models.CharField(max_length=100, verbose_name='Название')
+    description = models.TextField(verbose_name='Описание')
+    price = models.DecimalField(max_digits=8, decimal_places=2, verbose_name='Цена')
+    quantity = models.IntegerField(verbose_name='Количество')
     date_added = models.DateField(auto_now_add=True)
+    image = models.ImageField(upload_to='product_images', verbose_name='Фото', null=True, blank=True)
 
     def __str__(self):
         return f'Product: {self.name}, Price: {self.price}'

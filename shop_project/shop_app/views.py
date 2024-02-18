@@ -1,9 +1,12 @@
 import logging
 from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404
-from shop_app.models import Order, Client, OrderItem
+from shop_app.models import Order, Client, OrderItem, Product
 from datetime import timedelta
 from django.utils import timezone
+from shop_app.forms import ProductForm
+from django.core.files.storage import FileSystemStorage
+
 
 # Create your views here.
 logger = logging.getLogger(__name__)
@@ -111,3 +114,32 @@ def show_last_client_orders(request, client_id):
     }
 
     return render(request, "shop_app/last_client_orders.html", context)
+
+
+def update_product(request, product_id):
+    product = get_object_or_404(Product, pk=product_id)
+    if request.method == 'POST':
+        form = ProductForm(request.POST, request.FILES, instance=product)
+        message = 'Ошибка в данных'
+        if form.is_valid():
+            product.save()
+            message = 'Изменения сохранeны'
+    else:
+        form = ProductForm(instance=product)
+        message = f'Редактирование товара: {product.name}'
+    return render(request, 'shop_app/update_product_form.html', {'form': form, 'message': message})
+
+
+def create_product(request):
+    if request.method == 'POST':
+        form = ProductForm(request.POST, request.FILES)
+        message = 'Ошибка в данных'
+        if form.is_valid():
+            form.save()
+            message = f'Товар создан'
+            form = ProductForm()
+            #return render(request, "shop_app/create_product_form.html", {'form': form, 'message': message})
+    else:
+        form =ProductForm()
+        message = 'Создание нового товара'
+    return render(request, 'shop_app/create_product_form.html', {'form': form, 'message': message})
