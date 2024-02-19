@@ -1,3 +1,79 @@
 from django.contrib import admin
 
-# Register your models here.
+from shop_app.models import Product, Client, Order, OrderItem
+
+
+class ClientAdmin(admin.ModelAdmin):
+
+    list_display = ['name', 'email', 'phone', 'address', 'date_registered']
+    search_fields = ['name']
+    ordering = ['-date_registered']
+    list_filter = ['address', 'email']
+
+    fieldsets = [
+        (
+            None,
+            {
+                'classes': ['wide'],
+                'fields': ['name'],
+            },
+        ),
+        (
+            'Подробности',
+            {
+                'classes': ['collapse'],
+                'description': 'Данные о контактах покупателя',
+                'fields': ['email', 'phone']
+            },
+        ),
+        (
+            'Адрес',
+            {
+                'description': 'Адрес',
+                'fields': ['address'],
+            }
+        ),
+    ]
+
+
+class ProductAdmin(admin.ModelAdmin):
+    @admin.action(description="Обнуление количества продукта")
+    def reset_quantity(modeladmin, request, queryset):
+        queryset.update(quantity=0)
+
+    list_display = ['name', 'description', 'price', 'quantity']
+    search_fields = ['name']
+    ordering = ['-price']
+    list_filter = ['name']
+    actions = [reset_quantity]
+
+    fieldsets = [
+        (
+            None,
+            {
+                'classes': ['wide'],
+                'fields': ['name'],
+            },
+        ),
+        (
+            'Подробности',
+            {
+                'classes': ['collapse'],
+                'description': 'Данные о продукте',
+                'fields': ['description', 'price']
+            },
+        ),
+
+        (
+            'Количество товара',
+            {
+                'description': 'Количество',
+                'fields': ['quantity'],
+            }
+        ),
+    ]
+
+
+admin.site.register(Product, ProductAdmin)
+admin.site.register(Client, ClientAdmin)
+admin.site.register(Order)
