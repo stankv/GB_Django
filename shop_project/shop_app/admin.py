@@ -74,6 +74,20 @@ class ProductAdmin(admin.ModelAdmin):
     ]
 
 
+class OrderItemInline(admin.TabularInline):
+    model = OrderItem
+    extra = 0
+
+
+class OrderAdmin(admin.ModelAdmin):
+    list_display = ('id', 'client', 'date_ordered', 'total_price')
+    inlines = [OrderItemInline]
+
+    def total_price(self, obj):
+        return obj.total_price()
+    total_price.short_description = 'Общая цена'
+
+
 admin.site.register(Product, ProductAdmin)
 admin.site.register(Client, ClientAdmin)
-admin.site.register(Order)
+admin.site.register(Order, OrderAdmin)
